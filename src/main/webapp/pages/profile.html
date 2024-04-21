@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+
+<div th:object="${user}">
+    <h1 th:text="${user.name}"></h1>
+    <h1 th:text="${user.surname}"></h1>
+    <h1 th:text="${user.type}"></h1>
+</div>
+
+<form action="/profile/setting" method="get">
+    <button type="submit">Setting</button>
+</form>
+</body>
+</html>
