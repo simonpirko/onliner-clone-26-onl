@@ -4,9 +4,6 @@ import by.tms.onlinerclone26onl.model.User;
 import by.tms.onlinerclone26onl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,6 @@ import java.util.Optional;
 @Repository
 public class UserDao {
 
-    private final UserService userService;
     private final String URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=onliner";
     private final String USER = "postgres";
     private final String PASSWORD = "root";
