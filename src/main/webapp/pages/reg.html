@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<form action="#" th:action="@{/reg}" th:object="${newUser}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" />
+
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" th:field="*{surname}" />
+
+    <label for="password">Password:</label>
+    <input type="text" id="password" th:field="*{password}" />
+
+    <label for="seller">Seller</label>
+    <input type="checkbox" id="seller" name="seller">
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
