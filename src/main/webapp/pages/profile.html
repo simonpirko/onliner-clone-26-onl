@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="/pages/css/profile.css">
 </head>
-<body>
+<body class="profile-body">
 
-<div th:object="${user}">
-    <h1 th:text="${user.name}"></h1>
-    <h1 th:text="${user.surname}"></h1>
-    <h1 th:text="${user.type}"></h1>
+<div th:object="${user}" class="content">
+    <div class="circle" id="imageContainer">
+        <img th:src="@{'data:image/jpeg;base64,' + ${image}}" alt="Image" id="openModalBtn" style="cursor:pointer">
+    </div>
+
+    <div class="info">
+        <div class="b-links">
+            <h1 th:text="${user.name}"></h1>
+            <h1 th:text="${user.surname}"></h1>
+            <h1 th:text="${user.type}"></h1>
+        </div>
+        <div class="bottom-info">
+            <form action="/profile/setting" method="get">
+                <button type="submit">Setting</button>
+            </form>
+        </div>
+    </div>
 </div>
 
-<form action="/profile/setting" method="get">
-    <button type="submit">Setting</button>
-</form>
+
 </body>
 </html>

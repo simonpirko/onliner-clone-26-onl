@@ -14,14 +14,10 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
-    public void save(User user) {
-        if (userDao.findByName(user.getName()).isPresent()) {
-            return;
-        }
-
-        userDao.save(user);
-
+    public User save(User user) {
+        return userDao.saveUser(user);
     }
+
 
     public Optional<User> findByName(String name) {
         return userDao.findByName(name);

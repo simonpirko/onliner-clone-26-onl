@@ -3,8 +3,6 @@ package by.tms.onlinerclone26onl.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @Data
@@ -18,6 +16,6 @@ public class User {
     private String password;
     private String type;
     private List<Product> productList;
-    private MultipartFile image;
+    private byte[] image;
 
 }
