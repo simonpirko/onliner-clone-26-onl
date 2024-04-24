@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html lang="eu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="/pages/css/reg.css">
 </head>
 <body>
-<form action="#" th:action="@{/reg}" th:object="${newUser}" method="post">
-    <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}" />
+<div class="container">
+    <form action="#" th:action="@{/reg}" th:object="${user}" method="post" id="registrationForm">
+        <h1>Registration</h1>
 
-    <label for="surname">Surname:</label>
-    <input type="text" id="surname" th:field="*{surname}" />
+        <div class="input-group">
+            <input type="text" id="name" th:field="*{name}" placeholder="Name" required>
+        </div>
 
-    <label for="password">Password:</label>
-    <input type="text" id="password" th:field="*{password}" />
+        <div class="input-group">
+            <input type="text" id="surname" th:field="*{surname}" placeholder="Surname" required>
+        </div>
 
-    <label for="seller">Seller</label>
-    <input type="checkbox" id="seller" name="seller">
+        <div class="input-group">
+            <input type="password" id="password" th:field="*{password}" placeholder="Password" required>
+        </div>
 
-    <button type="submit">Submit</button>
-</form>
+        <div class="input-group">
+            <label for="seller">Seller</label>
+            <input type="checkbox" id="seller" name="seller">
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
 </body>
 </html>
