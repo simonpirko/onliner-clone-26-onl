@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,46 +36,44 @@ public class SettingController {
     }
 
     @PostMapping("/avatar")
-    public String avatarPost(Model model, @RequestParam("file") MultipartFile avatar) {
-        Optional<User> optionalUser = (Optional<User>) model.getAttribute("user");
+    public String updateAvatarPost(@SessionAttribute("user") User user,
+                             @RequestParam("file") MultipartFile avatar,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session) {
 
-        if (optionalUser != null && optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            try {
-
-                userService.updateImg(avatar.getBytes(),
-                        user.getId());
-                user.setImage(avatar);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            model.addAttribute("user", user);
-
+        try {
+            userService.updateImg(avatar.getBytes(), user.getId());
+            user.setImage(avatar.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+        session.setAttribute("user", user);
+
+        redirectAttributes.addFlashAttribute("user", user);
 
         return "redirect:/profile";
     }
 
     @PostMapping("/name")
-    public String namePost(@RequestParam String name,
+    public String updateNamePost(@RequestParam String name,
                            @SessionAttribute("user") User user,
                            RedirectAttributes redirectAttributes,
                            HttpSession session) {
 
         userService.updateName(user, name);
 
-        User newUser = userService.findById(user.getId()).orElse(null);
+        user.setName(name);
 
-        session.setAttribute("user", newUser);
+        session.setAttribute("user", user);
 
-        redirectAttributes.addFlashAttribute("user", newUser);
+        redirectAttributes.addFlashAttribute("user", user);
 
         return "redirect:/profile";
     }
 
     @PostMapping("/password")
-    public String passwordPost(@SessionAttribute("user") User user,
+    public String updatePasswordPost(@SessionAttribute("user") User user,
                                @RequestParam("newPassword") String newPassword,
                                @RequestParam("oldPassword") String oldPassword) throws PasswordException {
 
