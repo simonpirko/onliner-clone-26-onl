@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>OnlinerClone</title>
+</head>
+<body>
+<h1>OnlinerClone</h1>
+<h4>Описание товара</h4>
+
+<div th:object="${product.title}">
+    <h1 th:text="${product.description}"></h1>
+    <h1 th:text="${product.price}"></h1>
+    <h1 th:text="${product.address}"></h1>
+    <h1 th:text="${product.seller}"></h1>
+</div>
+
+<hr>
+<form action="/product/delete/${product.id}" method="post">
+    <input type="submit" value="Удалить товар">
+</form>
+</body>
+</html>
