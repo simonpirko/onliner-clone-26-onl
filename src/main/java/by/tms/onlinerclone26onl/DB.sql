@@ -25,3 +25,14 @@ create table user_password
 
 alter table user_password
     owner to postgres;
+
+create table product
+(
+    id          bigserial not null
+        constraint product_pk
+            primary key,
+    name        varchar   not null,
+    price       integer   not null,
+    description varchar   not null,
+    photo       bytea     not null
+);
