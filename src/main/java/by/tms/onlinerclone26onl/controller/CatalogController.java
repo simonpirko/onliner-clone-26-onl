@@ -29,21 +29,22 @@ public class CatalogController {
         model.addAttribute("product", productObj.getName());
         return "product";
     }
+
+
     @GetMapping("/add-product")
     public String addProduct() {
         return "add-product";
     }
-
 
     @PostMapping("/add-product")
     public String addProduct(@RequestParam("name") String name,
                              @RequestParam("price") int price,
                              @RequestParam("description") String description,
                              @RequestParam("photo") MultipartFile photo,
-                             @ModelAttribute("newUser") Product newProduct,
                              Model model) {
         try {
             byte[] photoBytes = photo.getBytes();
+            Product newProduct = new Product();
             newProduct.setPhoto(photoBytes);
             newProduct.setPrice(price);
             newProduct.setDescription(description);

@@ -13,14 +13,8 @@ import java.util.Optional;
 @Repository
 public class UserDao {
 
-    private final String URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=onliner";
-    private final String USER = "postgres";
-    private final String PASSWORD = "root";
-
     public void save(User user) {
-
-        try (Connection connection =
-                     DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement =
@@ -54,7 +48,7 @@ public class UserDao {
 
     public void delete(long id) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM user_account WHERE id = ?");
@@ -70,7 +64,7 @@ public class UserDao {
 
     public Optional<User> findById(long id) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_account WHERE id = ?");
@@ -96,7 +90,7 @@ public class UserDao {
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_account");
@@ -119,7 +113,7 @@ public class UserDao {
 
     public String findPasswordById(long id) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_password WHERE id_user = ?");
             preparedStatement.setLong(1, id);
@@ -138,7 +132,7 @@ public class UserDao {
 
     public void updateName(User user, String name) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE user_account SET name = ? WHERE id = ?");
@@ -155,7 +149,7 @@ public class UserDao {
 
     public void updateImg(byte[] file, Long id) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE user_account SET avatar = ? WHERE id = ?");
@@ -172,7 +166,7 @@ public class UserDao {
 
     public Optional<User> findByName(String name) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_account WHERE name = ?");
@@ -197,7 +191,7 @@ public class UserDao {
 
     public void updatePassword(long id, String password) {
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = PostgresConnection.getConnection()) {
 
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE user_password SET password = ? WHERE id_user = ?");

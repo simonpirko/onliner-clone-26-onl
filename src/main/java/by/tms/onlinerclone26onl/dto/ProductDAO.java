@@ -12,8 +12,7 @@ import java.sql.SQLException;
 public class ProductDAO {
 
     public void add(Product product) {
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "NetLove62")) {
-
+        try (Connection connection = PostgresConnection.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?)");
             statement.setString(1, product.getName());
             statement.setInt(2, product.getPrice());
