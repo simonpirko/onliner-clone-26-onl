@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>addProduct</title>
+    <link rel="stylesheet" type="text/css" href="/pages/css/home.css">
 </head>
 <body>
 <h1>add a new product</h1>
-<form action="/catalog/add-product" method="post" enctype="multipart/form-data">
+<form action="/profile/add-product" method="post" enctype="multipart/form-data">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
     <br>
@@ -21,7 +22,6 @@
     <br>
     <button type="submit">Submit</button>
 </form>
-<h1 th:text="${successMessage}"></h1>
 <h1 th:text="${successMessage}"></h1>
 </body>
 </html>

@@ -15,7 +15,7 @@ public class UserService {
     private UserDao userDao;
 
     public User save(User user) {
-        return userDao.saveUser(user);
+        return userDao.save(user);
     }
 
 

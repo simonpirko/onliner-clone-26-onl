@@ -34,5 +34,10 @@ create table product
     name        varchar   not null,
     price       integer   not null,
     description varchar   not null,
-    photo       bytea     not null
+    photo       bytea     not null,
+    id_seller   bigint    not null
 );
+
+alter table "onliner-clone".product
+    add constraint product_user_account_id_fk
+        foreign key (id_seller) references "onliner-clone".user_account;

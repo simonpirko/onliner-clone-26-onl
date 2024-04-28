@@ -1,13 +1,17 @@
 package by.tms.onlinerclone26onl.controller;
 
 
+import by.tms.onlinerclone26onl.model.Product;
 import by.tms.onlinerclone26onl.model.User;
+import by.tms.onlinerclone26onl.service.ProductService;
 import by.tms.onlinerclone26onl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final ProductService productService;
 
 
     @GetMapping
@@ -88,5 +93,30 @@ public class UserController {
         return "setting/setting";
     }
 
+    @GetMapping("profile/add-product")
+    public String addProduct() {
+        return "add-product";
+    }
+
+    @PostMapping("profile/add-product")
+    public String addProduct(@RequestParam("name") String name,
+                             @RequestParam("price") int price,
+                             @RequestParam("description") String description,
+                             @RequestParam("photo") MultipartFile photo,
+                             User user, Model model) {
+        try {
+            byte[] photoBytes = photo.getBytes();
+            Product newProduct = new Product();
+            newProduct.setPhoto(photoBytes);
+            newProduct.setPrice(price);
+            newProduct.setDescription(description);
+            newProduct.setName(name);
+            productService.add(newProduct, user);
+            model.addAttribute("successMessage", "Product added successfully");
+        } catch (IOException e) {
+            model.addAttribute("errorMessage", "Error uploading photo");
+        }
+        return "add-product";
+    }
 
 }
