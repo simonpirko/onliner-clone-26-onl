@@ -1,0 +1,15 @@
+.product-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.product-photo {
+    flex: 1;
+    margin-right: 20px;
+}
+.product-info {
+    flex: 2;
+}
+.product-info h2 {
+    margin-top: 0;
+}
