@@ -23,7 +23,7 @@
                 <button type="submit">Setting</button>
             </form>
         </div>
-        <div class="bottom-info" th:if="${user.setType('seller')}">
+        <div class="bottom-info" th:if="${user.getType()}">
             <form action="/profile/add-product" method="get">
                 <button type="submit">add product</button>
             </form>

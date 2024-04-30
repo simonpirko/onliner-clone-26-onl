@@ -5,7 +5,7 @@ create table user_account
             primary key,
     name    varchar                                                  not null,
     surname varchar                                                  not null,
-    type    varchar                                                  not null,
+    type    boolean                                                  not null,
     avatar  bytea
 );
 
@@ -38,6 +38,6 @@ create table product
     id_seller   bigint    not null
 );
 
-alter table "onliner-clone".product
+alter table product
     add constraint product_user_account_id_fk
-        foreign key (id_seller) references "onliner-clone".user_account;
+        foreign key (id_seller) references user_account;
