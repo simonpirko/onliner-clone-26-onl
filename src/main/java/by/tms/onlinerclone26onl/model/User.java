@@ -14,7 +14,7 @@ public class User {
     private String name;
     private String surname;
     private String password;
-    private String type;
+    private Boolean type;
     private List<Product> productList;
     private byte[] image;
 

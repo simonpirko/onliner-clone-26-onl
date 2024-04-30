@@ -12,7 +12,7 @@ public class ProductDAO {
 
     public void add(Product product, User user) {
         try (Connection connection = PostgresConnection.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?, ?) RETURNING id");
             statement.setString(1, product.getName());
             statement.setInt(2, product.getPrice());
             statement.setString(3, product.getDescription());
@@ -20,9 +20,9 @@ public class ProductDAO {
             statement.setLong(5, user.getId());
             statement.execute();
 
-            ResultSet generatedKeys = statement.getGeneratedKeys();
+            ResultSet generatedKeys = statement.executeQuery();
             if (generatedKeys.next()) {
-                long id = generatedKeys.getLong(1);
+                long id = generatedKeys.getLong("id");
                 product.setId(id);
             } else {
                 throw new SQLException("Failed to retrieve generated ID.");
