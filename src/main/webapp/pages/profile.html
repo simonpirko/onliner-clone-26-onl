@@ -16,7 +16,9 @@
         <div class="b-links">
             <h1 th:text="${user.name}"></h1>
             <h1 th:text="${user.surname}"></h1>
-            <h1 th:text="${user.type}"></h1>
+            <div th:if="${user.type}">
+                <h1> Seller </h1>
+            </div>
         </div>
         <div class="bottom-info">
             <form action="/profile/setting" method="get">

@@ -1,12 +1,15 @@
 package by.tms.onlinerclone26onl.dto;
 
 import by.tms.onlinerclone26onl.model.User;
+import by.tms.onlinerclone26onl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,43 +19,36 @@ import java.util.Optional;
 @Repository
 public class UserDao {
 
-    private final String DEFAULT_IMAGE = "C:\\Users\\dimad\\IdeaProjects\\onliner-clone-26-onl\\src\\main\\webapp\\defaultImg\\default_img.jpeg";
+    private final String DEFAULT_IMAGE = "/Users/stepan_gerasimovich/Desktop/onliner-clone-26-onl/src/main/webapp/defaultImg/default_img.jpeg";
 
     public User saveUser(User user) {
 
         try (Connection connection =
                      PostgresConnection.getConnection()) {
 
-            connection.setAutoCommit(false);
-
             File imageFile = new File(DEFAULT_IMAGE);
             byte[] image = Files.readAllBytes(imageFile.toPath());
+            long id = 0;
+
+            String password = encodePassword(user.getPassword());
 
             try (PreparedStatement preparedStatement =
-                         connection.prepareStatement("INSERT INTO user_account (name, surname, type, avatar) VALUES (?, ?, ?, ?) RETURNING id")) {
+                         connection.prepareStatement("INSERT INTO user_account (name, surname, password, type, avatar) VALUES (?, ?, ?, ?, ?) RETURNING id")) {
                 preparedStatement.setString(1, user.getName());
                 preparedStatement.setString(2, user.getSurname());
-                preparedStatement.setBoolean(3, user.getType());
-                preparedStatement.setBytes(4, image);
+                preparedStatement.setString(3, password);
+                preparedStatement.setBoolean(4, user.getType());
+                preparedStatement.setBytes(5, image);
 
-                ResultSet generatedKeys = preparedStatement.executeQuery();
-                long id;
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getLong("id");
-
-                    try (PreparedStatement preparedStatementPassword = connection.prepareStatement("INSERT INTO user_password VALUES (DEFAULT, ?, ?)")) {
-                        preparedStatementPassword.setString(1, user.getPassword());
-                        preparedStatementPassword.setLong(2, id);
-                        preparedStatementPassword.execute();
-                    }
-
-                } else {
-                    throw new SQLException("Failed to retrieve generated user id.");
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    id = resultSet.getLong("id");
                 }
+                preparedStatement.execute();
+
             }
 
-            connection.commit();
-
+            user.setId(id);
             user.setImage(image);
 
             return user;
@@ -60,12 +56,6 @@ public class UserDao {
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
-
-    }
-
-    public boolean checkUserType(User user) {
-
-        return false;
 
     }
 
@@ -133,7 +123,7 @@ public class UserDao {
 
         try (Connection connection = PostgresConnection.getConnection()) {
 
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_password WHERE id_user = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_account WHERE id = ?");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -216,6 +206,24 @@ public class UserDao {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public String encodePassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            byte[] encodedHash = digest.digest(password.getBytes());
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
 
 }

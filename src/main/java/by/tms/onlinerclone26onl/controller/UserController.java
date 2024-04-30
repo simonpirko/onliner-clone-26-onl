@@ -46,12 +46,12 @@ public class UserController {
             User newUser = userOptional.get();
             model.addAttribute("user", newUser);
 
-            if (userService.findPasswordById(newUser.getId()).equals(user.getPassword())) {
+            if (userService.findPasswordById(newUser.getId()).equals(userService.encodingPassword(user.getPassword()))) {
                 return "redirect:/profile";
             }
         }
-
-        return "redirect:/";
+        model.addAttribute("successMessage", "Incorrect name or password");
+        return "login";
 
     }
 

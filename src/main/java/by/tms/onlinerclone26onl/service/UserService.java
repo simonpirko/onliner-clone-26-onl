@@ -2,9 +2,12 @@ package by.tms.onlinerclone26onl.service;
 
 import by.tms.onlinerclone26onl.dto.UserDao;
 import by.tms.onlinerclone26onl.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,9 @@ public class UserService {
         return userDao.saveUser(user);
     }
 
+    public String encodingPassword(String password) {
+        return userDao.encodePassword(password);
+    }
 
     public Optional<User> findByName(String name) {
         return userDao.findByName(name);
