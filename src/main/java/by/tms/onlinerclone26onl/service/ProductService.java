@@ -7,13 +7,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+
     ProductDAO productDAO = new ProductDAO();
+
     public Product getProductById(long id) {
         productDAO.findById(id);
         return new Product();
     }
 
     public void add(Product product, User user) {
-        productDAO.add(product, user);
+        productDAO.add(product, user.getId());
     }
 }

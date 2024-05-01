@@ -10,23 +10,41 @@ import java.util.Optional;
 @Repository
 public class ProductDAO {
 
-    public void add(Product product, User user) {
+    public void add(Product product, Long userID) {
         try (Connection connection = PostgresConnection.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?, ?) RETURNING id");
-            statement.setString(1, product.getName());
-            statement.setInt(2, product.getPrice());
-            statement.setString(3, product.getDescription());
-            statement.setBytes(4, product.getPhoto());
-            statement.setLong(5, user.getId());
-            statement.execute();
+            connection.setAutoCommit(false);
 
-            ResultSet generatedKeys = statement.executeQuery();
-            if (generatedKeys.next()) {
-                long id = generatedKeys.getLong("id");
-                product.setId(id);
+            PreparedStatement statementCheck = connection.prepareStatement("SELECT id FROM product WHERE name = ?");
+            statementCheck.setString(1, product.getName());
+            ResultSet resultSet = statementCheck.executeQuery();
+            boolean productNameExists = resultSet.next();
+
+            if(!productNameExists) {
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?) RETURNING id");
+                statement.setString(1, product.getName());
+                statement.setInt(2, product.getPrice());
+                statement.setString(3, product.getDescription());
+                statement.setBytes(4, product.getPhoto());
+
+
+                ResultSet generatedKeys = statement.executeQuery();
+                if (generatedKeys.next()) {
+                    long id = generatedKeys.getLong("id");
+                    product.setId(id);
+                } else {
+                    throw new SQLException("Failed to retrieve generated ID.");
+                }
             } else {
-                throw new SQLException("Failed to retrieve generated ID.");
+                long existingProductId = resultSet.getLong("id");
+                product.setId(existingProductId);
             }
+
+            PreparedStatement statement2 = connection.prepareStatement("INSERT INTO products_sellers VALUES (?, ?)");
+            statement2.setLong(1, product.getId());
+            statement2.setLong(2, userID);
+            statement2.execute();
+            connection.commit();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
