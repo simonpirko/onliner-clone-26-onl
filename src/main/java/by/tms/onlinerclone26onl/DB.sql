@@ -21,10 +21,15 @@ create table product
     name        varchar   not null,
     price       integer   not null,
     description varchar   not null,
-    photo       bytea     not null,
-    id_seller   bigint    not null
+    photo       bytea     not null
 );
 
-alter table product
-    add constraint product_user_account_id_fk
-        foreign key (id_seller) references user_account;
+create table products_sellers
+(
+    id_product bigint not null
+        constraint products_sellers_product_id_fk
+            references product,
+    id_seller  bigint not null
+        constraint products_sellers_user_account_id_fk
+            references user_account
+);
