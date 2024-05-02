@@ -5,6 +5,8 @@ import by.tms.onlinerclone26onl.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -68,6 +70,22 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
         return Optional.empty();
+    }
+
+    public List<Long> findProductSellers(Long productID) {
+        try (Connection connection = PostgresConnection.getConnection()) {
+            List<Long> sellersId = new ArrayList<>();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id_seller FROM products_sellers WHERE id_product = ?");
+            preparedStatement.setLong(1, productID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Long Id = resultSet.getLong("id_seller");
+                sellersId.add(Id);
+            }
+            return sellersId;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

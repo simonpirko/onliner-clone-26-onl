@@ -7,17 +7,26 @@
 </head>
 <body>
 <h1>Product Details</h1>
-<div class="product-container" th:if="${productObj != null}">
+<div class="product-container" th:if="${product != null}">
     <div class="product-photo">
-        <img th:src="@{/path/to/photo/${productObj.photo}}" alt="Product Photo"/>
+        <img th:src="@{'data:image/jpeg;base64,' + ${photo}}" alt="Product Photo" style="width: 450px; height: 450px;"/>
     </div>
     <div class="product-info">
-        <h2 th:text="${productObj.name}"></h2>
-        <p th:text="'Price: ' + ${productObj.price} + ' Br'"></p>
-        <p th:text="${productObj.description}"></p>
+        <h2 th:text="${product.name}"></h2>
+        <p th:text="'Price: ' + ${product.price} + ' Br'"></p>
+        <p th:text="${product.description}"></p>
     </div>
 </div>
-<div th:unless="${productObj != null}">
+<div th:object="${productSellers}">
+    <h3>Sellers:</h3>
+    <ul>
+        <li th:each="seller : ${productSellers}">
+            <span th:text="${seller.name}">Seller Name</span>
+            <!-- кнопка закзать, номер телефона или другие данные -->
+        </li>
+    </ul>
+</div>
+<div th:unless="${product != null}">
     <p>No product found.</p>
 </div>
 </body>

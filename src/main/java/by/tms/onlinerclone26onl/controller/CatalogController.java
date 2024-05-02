@@ -1,10 +1,15 @@
 package by.tms.onlinerclone26onl.controller;
 
 import by.tms.onlinerclone26onl.model.Product;
+import by.tms.onlinerclone26onl.model.User;
 import by.tms.onlinerclone26onl.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/catalog")
@@ -18,12 +23,14 @@ public class CatalogController {
 
     // тут логика каталога
 
-    @GetMapping("/{product}")
-    public String getProduct(@RequestParam("id") long idProduct, Model model, @PathVariable String product) {
-
-        Product productObj = productService.getProductById(idProduct);
-        model.addAttribute("productObj", productObj);
-        product = productObj.getName();
+    @GetMapping("/{idProduct}") //TODO доработать ссылку
+    public String getProduct(@PathVariable("idProduct") long idProduct, Model model) {
+        Product product = productService.getProductById(idProduct);
+        String photo = Base64.getEncoder().encodeToString(product.getPhoto());
+        model.addAttribute("photo", photo);
+        model.addAttribute("product", product);
+        List<User> productSellers = productService.findProductSellers(idProduct);
+        model.addAttribute("productSellers", productSellers);
         return "product";
     }
 }
