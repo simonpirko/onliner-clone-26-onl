@@ -130,7 +130,6 @@ public class UserController {
     public String myProducts(@SessionAttribute("user") User user, Model model) {
         List<Product> products = productService.findProductsBySellerId(user.getId());
         model.addAttribute("products", products);
-        System.out.println(Arrays.toString(products.toArray()));
         return "my-products";
     }
 
