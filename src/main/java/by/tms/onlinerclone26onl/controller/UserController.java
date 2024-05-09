@@ -11,8 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -38,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginPost(@ModelAttribute("user") User user, Model model) {
+    public String loginPost(@ModelAttribute("user") User user, Model model, HttpSession session) {
 
         Optional<User> userOptional = userService.findByName(user.getName());
 
@@ -47,6 +51,7 @@ public class UserController {
             model.addAttribute("user", newUser);
 
             if (userService.findPasswordById(newUser.getId()).equals(userService.encodingPassword(user.getPassword()))) {
+                session.setAttribute("user", newUser);
                 return "redirect:/profile";
             }
         }
@@ -100,11 +105,12 @@ public class UserController {
 
     @PostMapping("/profile/add-product")
     public String addProductPost (@RequestParam("name") String name,
-                                  @RequestParam("price") int price,
+                                  @RequestParam("price") double price,
                                   @RequestParam("description") String description,
                                   @RequestParam("photo") MultipartFile photo,
+                                  @RequestParam("quantity") long quantity,
                                   Model model,
-                                  @SessionAttribute User user){
+                                  @SessionAttribute("user") User user){
         try{
             byte[] photoBytes = photo.getBytes();
             Product newProduct = new Product();
@@ -112,11 +118,29 @@ public class UserController {
             newProduct.setPrice(price);
             newProduct.setDescription(description);
             newProduct.setPhoto(photoBytes);
-            productService.add(newProduct, user);
+            productService.add(newProduct, user.getId(), quantity);
             model.addAttribute("successMessage", "Product added");
         } catch (IOException e) {
             model.addAttribute("successMessage", "Error uploading image");
         }
         return "add-product";
     }
+
+    @GetMapping("/profile/my-products")
+    public String myProducts(@SessionAttribute("user") User user, Model model) {
+        List<Product> products = productService.findProductsBySellerId(user.getId());
+        model.addAttribute("products", products);
+        return "my-products";
+    }
+
+    @PostMapping("/profile/update")
+    public String update(@SessionAttribute("user") User user, @RequestParam long productId, @RequestParam long quantity, @RequestParam long price, @RequestParam(required = false) Boolean delete) {
+        if (delete!= null && delete) {
+            productService.delete(user.getId(), productId);
+        } else {
+            productService.update(productId, user.getId(), quantity, price);
+        }
+        return "redirect:/my-products";
+    }
+
 }

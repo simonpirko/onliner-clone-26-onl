@@ -16,7 +16,8 @@ public class Product {
     private long id;
     private String name;
     private String description;
-    private int price;
+    private double price;
+    private long quantity;
     private byte[] photo;
     private Map<String, String> characteristics;
 

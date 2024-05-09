@@ -13,7 +13,7 @@
     </div>
     <div class="product-info">
         <h2 th:text="${product.name}"></h2>
-        <p th:text="'Price: ' + ${product.price} + ' Br'"></p>
+        <p th:text="${pricesMinAndMax[0]} + ' - ' + ${pricesMinAndMax[1]} + ' Br'"></p>
         <p th:text="${product.description}"></p>
     </div>
 </div>
@@ -21,10 +21,21 @@
     <h3>Sellers:</h3>
     <ul>
         <li th:each="seller : ${productSellers}">
-            <span th:text="${seller.name}">Seller Name</span>
-            <!-- кнопка закзать, номер телефона или другие данные -->
+            <div>
+                <h4><span th:text="${seller.name}">Seller Name: </span></h4>
+                <p><span th:text="${allPrice.get(seller.Id)}">Price: </span></p>
+                <!-- Добавлять сюда более подробную информацию о каждом продавце, например
+                <p>Phone: <span th:text="${seller.phone}">Phone Number: </span></p>
+                ... -->
+                <button th:text="'Add cart'">Add cart</button>
+            </div>
         </li>
     </ul>
+</div>
+<div class="bottom-info">
+    <form action="/catalog/" method="get">
+        <button type="submit">return</button>
+    </form>
 </div>
 <div th:unless="${product != null}">
     <p>No product found.</p>
