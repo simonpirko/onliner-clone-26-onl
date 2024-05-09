@@ -30,6 +30,11 @@
                 <button type="submit">add product</button>
             </form>
         </div>
+        <div class="bottom-info" th:if="${user.getType()}">
+            <form action="/profile/my-products" method="get">
+                <button type="submit">my products</button>
+            </form>
+        </div>
     </div>
 </div>
 

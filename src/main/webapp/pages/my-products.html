@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Products</title>
+</head>
+<body>
+<h1>My Products</h1>
+<div th:if="${products}">
+    <div th:each="product : ${products}">
+        <h2 th:text="${product.name}">Product Name</h2>
+        <!-- не выводятся изображения, ломает код дальше,
+        <img th:src="${'data:image/jpeg;base64,' + T(by.tms.onlinerclone26onl.util.ImageUtils).bytesToBase64(product.getPhoto())}" />
+        -->
+        <p th:text="${product.description}">Product Description</p>
+        <p th:text="${product.price}">Product Price</p>
+        <p>
+        <form th:action="@{/update}" method="post">
+            <input type="hidden" th:value="${product.id}" name="productId" />
+            <label th:text="'quantity:'">Quantity:</label>
+            <input type="number" th:value="${product.quantity}" name="quantity" />
+            <label th:text="'Price:'">Price:</label>
+            <input type="number" th:value="${product.price}" name="price" />
+            <button type="submit" name="delete" value="true">Delete</button>
+            <button type="submit">Update</button>
+        </form>
+        </p>
+        <hr />
+    </div>
+</div>
+<p th:if="${!products}">You don't have any products.</p>
+<div class="bottom-info">
+    <form action="/profile/" method="get">
+        <button type="submit">return</button>
+    </form>
+</div>
+</body>
+</html>

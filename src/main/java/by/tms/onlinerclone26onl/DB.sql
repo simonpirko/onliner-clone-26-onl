@@ -19,7 +19,6 @@ create table product
         constraint product_pk
             primary key,
     name        varchar   not null,
-    price       integer   not null,
     description varchar   not null,
     photo       bytea     not null
 );
@@ -31,5 +30,7 @@ create table products_sellers
             references product,
     id_seller  bigint not null
         constraint products_sellers_user_account_id_fk
-            references user_account
+            references user_account,
+    price integer not null,
+    quantity bigint not null
 );
