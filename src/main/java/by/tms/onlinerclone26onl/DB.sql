@@ -31,6 +31,6 @@ create table products_sellers
     id_seller  bigint not null
         constraint products_sellers_user_account_id_fk
             references user_account,
-    price integer not null,
+    price decimal not null,
     quantity bigint not null
 );

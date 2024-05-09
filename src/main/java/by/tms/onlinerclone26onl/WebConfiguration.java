@@ -69,13 +69,4 @@ public class WebConfiguration implements WebMvcConfigurer {
         return resolver;
     }
 
-    @Bean
-    public Converter<byte[], String> byteArrayToStringConverter() {
-        return new Converter<byte[], String>() {
-            @Override
-            public String convert(byte[] bytes) {
-                return Base64.getEncoder().encodeToString(bytes);
-            }
-        };
-    }
 }

@@ -5,6 +5,7 @@ import by.tms.onlinerclone26onl.model.Product;
 import by.tms.onlinerclone26onl.model.User;
 import by.tms.onlinerclone26onl.service.ProductService;
 import by.tms.onlinerclone26onl.service.UserService;
+import by.tms.onlinerclone26onl.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -105,7 +104,7 @@ public class UserController {
 
     @PostMapping("/profile/add-product")
     public String addProductPost (@RequestParam("name") String name,
-                                  @RequestParam("price") double price,
+                                  @RequestParam("price") BigDecimal price,
                                   @RequestParam("description") String description,
                                   @RequestParam("photo") MultipartFile photo,
                                   @RequestParam("quantity") long quantity,
@@ -130,18 +129,17 @@ public class UserController {
     public String myProducts(@SessionAttribute("user") User user, Model model) {
         List<Product> products = productService.findProductsBySellerId(user.getId());
         model.addAttribute("products", products);
-        System.out.println(Arrays.toString(products.toArray()));
         return "my-products";
     }
 
     @PostMapping("/profile/update")
-    public String update(@SessionAttribute("user") User user, @RequestParam long productId, @RequestParam long quantity, @RequestParam long price, @RequestParam(required = false) Boolean delete) {
+    public String update(@SessionAttribute("user") User user, @RequestParam long productId, @RequestParam long quantity, @RequestParam BigDecimal price, @RequestParam(required = false) Boolean delete) {
         if (delete!= null && delete) {
             productService.delete(user.getId(), productId);
         } else {
             productService.update(productId, user.getId(), quantity, price);
         }
-        return "redirect:/my-products";
+        return "my-products";
     }
 
 }

@@ -1,11 +1,12 @@
 package by.tms.onlinerclone26onl.service;
 
-import by.tms.onlinerclone26onl.dto.ProductDAO;
-import by.tms.onlinerclone26onl.dto.UserDao;
+import by.tms.onlinerclone26onl.dao.ProductDAO;
+import by.tms.onlinerclone26onl.dao.UserDao;
 import by.tms.onlinerclone26onl.model.Product;
 import by.tms.onlinerclone26onl.model.User;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -47,13 +48,13 @@ public class ProductService {
         return productDAO.findProductsBySellerId(userID);
     }
 
-    public void update(long productId, long userID, long quantity, double price) {
+    public void update(long productId, long userID, long quantity, BigDecimal price) {
         productDAO.update(productId, userID, quantity, price);
     }
 
-    public List<Double> searchPriceMinAndMax (long productID) {
-        List<Double> PriceMinAndMax = new ArrayList<>();
-        Map<Long, Double> allPrice = searchAllPrice(productID);
+    public List<BigDecimal> searchPriceMinAndMax (long productID) {
+        List<BigDecimal> PriceMinAndMax = new ArrayList<>();
+        Map<Long, BigDecimal> allPrice = searchAllPrice(productID);
         if (!allPrice.isEmpty()) {
             PriceMinAndMax.add(Collections.min(allPrice.values()));
             PriceMinAndMax.add(Collections.max(allPrice.values()));
@@ -61,7 +62,7 @@ public class ProductService {
         return PriceMinAndMax;
     }
 
-    public Map<Long, Double> searchAllPrice (long productID) {
+    public Map<Long, BigDecimal> searchAllPrice (long productID) {
         return productDAO.searchAllPrice(productID);
     }
 

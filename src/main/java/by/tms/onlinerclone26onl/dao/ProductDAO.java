@@ -1,10 +1,9 @@
-package by.tms.onlinerclone26onl.dto;
+package by.tms.onlinerclone26onl.dao;
 
 import by.tms.onlinerclone26onl.model.Product;
-import by.tms.onlinerclone26onl.model.User;
 import org.springframework.stereotype.Repository;
 
-import java.io.PipedOutputStream;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class ProductDAO {
             statement2.setLong(1, product.getId());
             statement2.setLong(2, userID);
             statement2.setLong(3, quantity);
-            statement2.setDouble(4, product.getPrice());
+            statement2.setBigDecimal(4, product.getPrice());
             statement2.execute();
             connection.commit();
 
@@ -122,18 +121,20 @@ public class ProductDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Long> productIDs = new ArrayList<>();
             Map<Long, Long> productQuantities = new HashMap<>();
-            Map<Long, Double> productPrices = new HashMap<>();
+            Map<Long, BigDecimal> productPrices = new HashMap<>();
             while (resultSet.next()) {
                 long productID = resultSet.getLong("id_product");
                 long quantity = resultSet.getLong("quantity");
-                double price = resultSet.getDouble("price");
+                BigDecimal price = resultSet.getBigDecimal("price");
                 productIDs.add(productID);
                 productQuantities.put(productID, quantity);
                 productPrices.put(productID, price);
             }
 
             // Шаг 2. Получение сведений о продукте из таблицы продуктов.
-            preparedStatement = connection.prepareStatement("SELECT p.*, ps.price FROM product p INNER JOIN products_sellers ps ON p.id = ps.id_product WHERE p.id IN (" + String.join(", ", productIDs.stream().map(String::valueOf).collect(Collectors.toList())) + ")");
+            preparedStatement = connection.prepareStatement("SELECT p.*, ps.price FROM product p INNER JOIN products_sellers ps " +
+                    "ON p.id = ps.id_product WHERE p.id IN " +
+                    "(" + String.join(", ", productIDs.stream().map(String::valueOf).collect(Collectors.toList())) + ")");
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -157,11 +158,11 @@ public class ProductDAO {
 
 
 
-    public void update(long productId, long sellerID, long quantity, double price) {
+    public void update(long productId, long sellerID, long quantity, BigDecimal price) {
         try(Connection connection = PostgresConnection.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE products_sellers SET quantity = quantity + ? AND price = ? WHERE id_product = ? AND id_seller = ?");
             preparedStatement.setLong(1, quantity);
-            preparedStatement.setDouble(2, price);
+            preparedStatement.setBigDecimal(2, price);
             preparedStatement.setLong(3, productId);
             preparedStatement.setLong(4, sellerID);
         } catch (SQLException e) {
@@ -169,14 +170,14 @@ public class ProductDAO {
         }
     }
 
-    public Map<Long, Double> searchAllPrice(long productID) {
-        Map<Long, Double> prices = new HashMap<>();
+    public Map<Long, BigDecimal> searchAllPrice(long productID) {
+        Map<Long, BigDecimal> prices = new HashMap<>();
         try(Connection connection = PostgresConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT price, id_seller FROM products_sellers WHERE id_product = ?");
             preparedStatement.setLong(1, productID);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                prices.put(resultSet.getLong("id_seller"), resultSet.getDouble("price"));
+                prices.put(resultSet.getLong("id_seller"), resultSet.getBigDecimal("price"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
