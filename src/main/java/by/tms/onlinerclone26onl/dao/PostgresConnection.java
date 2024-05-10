@@ -1,4 +1,4 @@
-package by.tms.onlinerclone26onl.dto;
+package by.tms.onlinerclone26onl.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,7 +1,6 @@
-package by.tms.onlinerclone26onl.dto;
+package by.tms.onlinerclone26onl.dao;
 
 import by.tms.onlinerclone26onl.model.User;
-import by.tms.onlinerclone26onl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

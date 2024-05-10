@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>My Products</title>
@@ -9,9 +9,7 @@
 <div th:if="${products}">
     <div th:each="product : ${products}">
         <h2 th:text="${product.name}">Product Name</h2>
-        <!-- не выводятся изображения, ломает код дальше,
-        <img th:src="${'data:image/jpeg;base64,' + T(by.tms.onlinerclone26onl.util.ImageUtils).bytesToBase64(product.getPhoto())}" />
-        -->
+        <img th:src="'data:image/png;base64,' + ${product.imageBase64}" alt="photo" style="width: 200px; height: 200px;">
         <p th:text="${product.description}">Product Description</p>
         <p th:text="${product.price}">Product Price</p>
         <p>
