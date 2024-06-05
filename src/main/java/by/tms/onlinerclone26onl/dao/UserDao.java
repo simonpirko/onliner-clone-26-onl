@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public class UserDao {
 
-    private final String DEFAULT_IMAGE = "C:\\Users\\dimad\\IdeaProjects\\onliner-clone-26-onl\\src\\main\\webapp\\defaultImg\\default_img.jpeg";
+    private final String DEFAULT_IMAGE = "C:\\Users\\Liisa\\Desktop\\уроки Java\\Homework\\onliner-clone-26-onl\\src\\main\\webapp\\defaultImg\\default_img.jpeg";
 
     public User saveUser(User user) {
 

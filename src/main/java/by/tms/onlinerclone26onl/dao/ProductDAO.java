@@ -3,7 +3,6 @@ package by.tms.onlinerclone26onl.dao;
 import by.tms.onlinerclone26onl.model.Product;
 import by.tms.onlinerclone26onl.service.SubcategoryService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;

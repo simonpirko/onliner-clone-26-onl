@@ -1,7 +1,6 @@
 package by.tms.onlinerclone26onl.controller;
 
 import by.tms.onlinerclone26onl.model.Category;
-import by.tms.onlinerclone26onl.model.Subcategory;
 import by.tms.onlinerclone26onl.model.User;
 import by.tms.onlinerclone26onl.service.CategoryService;
 import lombok.RequiredArgsConstructor;
