@@ -196,7 +196,7 @@ public class UserDao {
 
         try (Connection connection = PostgresConnection.getConnection()) {
 
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE user_account SET password = ? WHERE id_user = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE user_account SET password = ? WHERE id = ?");
             preparedStatement.setString(1, password);
             preparedStatement.setLong(2, id);
             preparedStatement.execute();
