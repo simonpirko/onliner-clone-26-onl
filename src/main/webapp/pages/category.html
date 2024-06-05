@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Category</title>
+    <link rel="stylesheet" type="text/css" href="/pages/css/category.css">
+</head>
+<body>
+<div class="container">
+    <h1>Categories</h1>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:each="category : ${categories}" class="category">
+        <div tabindex="0">
+            <span th:text="${category.name}">Category Name</span>
+        </div>
+        <div class="subcategory" th:each="subcategory : ${category.subcategories}">
+            <a th:href="@{/subcategory/{id}(id=${subcategory.id})}" class="btn btn-link subcategory-btn" th:text="${subcategory.name}">Subcategory Name</a>
+        </div>
+    </div>
+
+    <div th:if="${user.getType()}">
+        <h2>Seller section</h2>
+        <form action="/category/add" method="get">
+            <button type="submit">Add Category</button>
+        </form>
+        <form action="/subcategory/add" method="get">
+            <button type="submit">Add Subcategory</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

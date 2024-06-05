@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subcategory Products</title>
+</head>
+<body>
+<h1 th:text="${subcategory.name}">Subcategory Name</h1>
+<ul>
+    <div th:if="${products}">
+        <div th:each="product : ${products}">
+            <h2 th:text="${product.name}">Product Name</h2>
+            <img th:src="'data:image/png;base64,' + ${product.imageBase64}" alt="photo" style="width: 200px; height: 200px;">
+            <p th:text="${product.description}">Product Description</p>
+            <p th:text="${product.price}">Product Price</p>
+            <p>
+            <form th:action="@{/buy}" method="post">
+                <input type="hidden" th:value="${product.id}" name="productId" />
+                <label>Quantity:</label>
+                <span th:text="${product.quantity}">Quantity</span>
+                <br>
+                <label>Price:</label>
+                <span th:text="${product.price}">Price</span>
+                <br>
+                <button type="submit">Buy</button>
+            </form>
+            <form th:action="@{/add-to-cart}" method="post">
+                <input type="hidden" th:value="${product.id}" name="productId" />
+                <button type="submit">Add to Cart</button>
+            </form>
+            </p>
+            <hr />
+        </div>
+    </div>
+</ul>
+</body>
+</html>

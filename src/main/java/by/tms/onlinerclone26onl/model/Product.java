@@ -22,6 +22,7 @@ public class Product {
     private long quantity;
     private byte[] photo;
     private Map<String, String> characteristics;
+    private Subcategory subcategory;
 
     public Product(String name, String description, BigDecimal price, byte[] bytes) {
     }

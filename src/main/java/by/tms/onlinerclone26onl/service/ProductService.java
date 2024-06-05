@@ -4,20 +4,25 @@ import by.tms.onlinerclone26onl.dao.ProductDAO;
 import by.tms.onlinerclone26onl.dao.UserDao;
 import by.tms.onlinerclone26onl.model.Product;
 import by.tms.onlinerclone26onl.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
-
-    ProductDAO productDAO = new ProductDAO();
-    UserDao userDao = new UserDao();
+    private final ProductDAO productDAO;
+    private final UserDao userDao;
 
     public Product getProductById(long id) {
         Optional<Product> product = productDAO.findById(id);
         return product.orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    public List<Product> getProductsBySubcategoryId(Long subcategoryId) {
+       return productDAO.findBySubcategoryId(subcategoryId);
     }
 
     public void add(Product product, long userID, long quantity) {
