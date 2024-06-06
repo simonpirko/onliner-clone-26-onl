@@ -1,18 +1,15 @@
 package by.tms.onlinerclone26onl.controller;
-
-
 import by.tms.onlinerclone26onl.model.Product;
+import by.tms.onlinerclone26onl.model.Subcategory;
 import by.tms.onlinerclone26onl.model.User;
 import by.tms.onlinerclone26onl.service.ProductService;
+import by.tms.onlinerclone26onl.service.SubcategoryService;
 import by.tms.onlinerclone26onl.service.UserService;
-import by.tms.onlinerclone26onl.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final SubcategoryService subcategoryService;
 
 
     @GetMapping
@@ -98,7 +96,9 @@ public class UserController {
     }
 
     @GetMapping("/profile/add-product")
-    public String addProduct() {
+    public String addProduct(Model model) {
+        List<Subcategory> subcategories = subcategoryService.getAllSubcategories();
+        model.addAttribute("subcategories", subcategories);
         return "add-product";
     }
 
@@ -108,6 +108,7 @@ public class UserController {
                                   @RequestParam("description") String description,
                                   @RequestParam("photo") MultipartFile photo,
                                   @RequestParam("quantity") long quantity,
+                                  @RequestParam("subcategory") long subcategoryId,
                                   Model model,
                                   @SessionAttribute("user") User user){
         try{
@@ -117,6 +118,7 @@ public class UserController {
             newProduct.setPrice(price);
             newProduct.setDescription(description);
             newProduct.setPhoto(photoBytes);
+            newProduct.setSubcategory(subcategoryService.getSubcategoryById(subcategoryId));
             productService.add(newProduct, user.getId(), quantity);
             model.addAttribute("successMessage", "Product added");
         } catch (IOException e) {

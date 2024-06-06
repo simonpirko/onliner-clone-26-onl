@@ -1,6 +1,8 @@
 package by.tms.onlinerclone26onl.dao;
 
 import by.tms.onlinerclone26onl.model.Product;
+import by.tms.onlinerclone26onl.service.SubcategoryService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -9,7 +11,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
+@AllArgsConstructor
 public class ProductDAO {
+    private final SubcategoryService subcategoryService;
 
     public void add(Product product, long userID, long quantity) {
         try (Connection connection = PostgresConnection.getConnection()) {
@@ -21,11 +25,11 @@ public class ProductDAO {
             boolean productNameExists = resultSet.next();
 
             if(!productNameExists) {
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?) RETURNING id");
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (default, ?, ?, ?, ?) RETURNING id");
                 statement.setString(1, product.getName());
                 statement.setString(2, product.getDescription());
                 statement.setBytes(3, product.getPhoto());
-
+                statement.setLong(4, product.getSubcategory().getId());
 
                 ResultSet generatedKeys = statement.executeQuery();
                 if (generatedKeys.next()) {
@@ -69,6 +73,28 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
         return Optional.empty();
+    }
+
+    public List<Product> findBySubcategoryId(long subcategoryId) {
+        List<Product> allProduct;
+        try (Connection connection = PostgresConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from product where subcategory_id = ?");
+            preparedStatement.setLong(1, subcategoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            allProduct = new ArrayList<>();
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setId(resultSet.getLong("id"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setPhoto(resultSet.getBytes("photo"));
+                product.setSubcategory(subcategoryService.getSubcategoryById(resultSet.getLong("subcategory_id")));
+                allProduct.add(product);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return allProduct;
     }
 
     public List<Long> findProductSellers(long productID) {

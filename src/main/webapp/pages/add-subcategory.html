@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Add Subcategory</h1>
+<form action="/subcategory/add" method="post">
+    <label for="name">Subcategory Name:</label>
+    <input type="text" id="name" name="name">
+
+    <label for="category">Category:</label>
+    <select id="category" name="categoryId">
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+    <button type="submit">Add Subcategory</button>
+</form>
+</body>
+</html>
